@@ -9,8 +9,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: U*5b3dt5wXg1xgylrxmy
       MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: "allahsoft"
-      MYSQL_USER: allahsoftadmin
+      MYSQL_DATABASE: "soundweave"
+      MYSQL_USER: soundweaveadmin
       MYSQL_PASSWORD: u*b5BWc5WXgLXGyLrxMy
     volumes:
       - "db-dev-data:/var/lib/mysql"
