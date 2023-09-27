@@ -11,13 +11,21 @@ const example: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       reply: FastifyReply
     ) {
       const { name, email } = request.body;
-      const user = await prisma.user.create({
-        data: {
-          email: email,
-          name: name,
-        },
-      });
-      reply.send(user);
+      const token = fastify.jwt.sign({ email })
+      try {
+        const user = await prisma.user.create({
+          data: {
+            email: email,
+            name: name,
+          },
+        })
+        reply.send({ token, user })
+      } catch (error) {
+        if (error instanceof Error) {
+          return reply.badRequest(error.message);
+        }
+        reply.badRequest("Unknow Error");
+      }
     }
   );
 };
