@@ -4,7 +4,7 @@ import { testInterfaceD } from "../../interfaces/testInterface";
 const prisma = new PrismaClient();
 
 const example: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-  fastify.get(
+  fastify.post(
     "/",
     async function (
       request: FastifyRequest<{ Body: testInterfaceD }>,
