@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
-          node-version: '18.x'
+          node-version: "18.x"
 
       - name: npm install, build, and test
         run: |
@@ -27,17 +27,29 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Create .env file and get database url
+        run: |
+          touch .env
+          echo DATABASE_URL=${{secrets.DATABASE_URL}} >> .env
+          cat .env
+
+      - name: run prisma migrations
+        run: npx prisma migrate deploy
+
+      - name: zip artifact for deployment job
+        run: zip release.zip ./* -r
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -46,11 +58,11 @@ jobs:
         with:
           name: node-app
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'SoundWeave-backend'
-          slot-name: 'Production'
+          app-name: "SoundWeave-backend"
+          slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_43D074F4E5854590A94CAD40A26ADF8E }}
           package: .
