@@ -1,7 +1,6 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import { PrismaClient } from "@prisma/client";
-import { testInterfaceD } from "../../interfaces/testInterface";
-const prisma = new PrismaClient();
+import testInterfaceD from "../../interfaces/testInterface";
+import prisma from "../../utils/ormConnection";
 
 const example: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.post(
@@ -24,7 +23,7 @@ const example: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         if (error instanceof Error) {
           return reply.badRequest(error.message);
         }
-        reply.badRequest("Unknow Error");
+        reply.badRequest("Unknown Error");
       }
     }
   );
